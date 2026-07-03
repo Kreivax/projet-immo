@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notre projet immobilier — Finistère</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* ─── Reset & base ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1B3A5C;
+  --navy-light: #2A5280;
+  --teal: #2A9D8F;
+  --teal-light: #E0F4F2;
+  --amber: #E9A840;
+  --amber-light: #FEF5E4;
+  --red: #C0392B;
+  --red-light: #FDECEA;
+  --sand: #F8F7F3;
+  --white: #FFFFFF;
+  --gray-100: #F1F0EB;
+  --gray-200: #E2E0D8;
+  --gray-400: #9B9790;
+  --gray-600: #6B7280;
+  --gray-800: #374151;
+  --text: #1A1A18;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+  --radius: 10px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.05);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--sand);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ─── Layout ─── */
+.layout { display: flex; min-height: 100vh; }
+
+/* ─── Sidebar ─── */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--navy);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.25rem;
+}
+.sidebar-brand {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.25rem;
+  line-height: 1.2;
+}
+.sidebar-sub { font-size: 11px; color: rgba(255,255,255,0.45); margin-bottom: 2.5rem; }
+.nav-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; margin-top: 1.5rem; }
+.nav-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: 7px;
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7);
+  text-decoration: none; margin-bottom: 2px;
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
+}
+.nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.12); color: #fff; }
+.nav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot-blue { background: #5BA3F5; }
+.dot-teal { background: var(--teal); }
+.dot-amber { background: var(--amber); }
+.dot-gray { background: rgba(255,255,255,0.3); }
+.sidebar-footer { margin-top: auto; font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.6; }
+
+/* ─── Main ─── */
+.main { flex: 1; overflow-x: hidden; }
+
+/* ─── Hero ─── */
+.hero {
+  background: var(--navy);
+  color: #fff;
+  padding: 3.5rem 3rem 3rem;
+}
+.hero-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 0.75rem;
+}
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700; line-height: 1.1; letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+.hero-title em { font-style: normal; color: #5BA3F5; }
+.hero-desc { font-size: 14px; color: rgba(255,255,255,0.6); max-width: 540px; margin-bottom: 2.5rem; }
+.hero-kpis { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+.hero-kpi-val { font-family: var(--serif); font-size: 2.2rem; font-weight: 700; line-height: 1; }
+.hero-kpi-val.accent { color: #5BA3F5; }
+.hero-kpi-val.teal { color: #4DD4A8; }
+.hero-kpi-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; letter-spacing: 0.04em; }
+
+/* ─── Sections ─── */
+.section { padding: 3rem; border-bottom: 1px solid var(--gray-200); }
+.section:last-child { border-bottom: none; }
+.section-eyebrow {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--gray-400); margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: 1.5rem; font-weight: 700; color: var(--navy);
+  margin-bottom: 0.5rem; letter-spacing: -0.02em;
+}
+.section-desc { font-size: 13.5px; color: var(--gray-600); max-width: 680px; margin-bottom: 2rem; line-height: 1.7; }
+
+/* ─── Cards ─── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.card-head {
+  padding: 1rem 1.25rem 0.875rem;
+  border-bottom: 1px solid var(--gray-100);
+}
+.card-body { padding: 1.25rem; }
+.card-accent-blue { border-top: 3px solid var(--navy-light); }
+.card-accent-teal { border-top: 3px solid var(--teal); }
+
+/* ─── Grid layouts ─── */
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 1rem; }
+
+/* ─── KPI tiles ─── */
+.kpi-tile {
+  background: var(--gray-100);
+  border-radius: 8px; padding: 0.875rem 1rem;
+}
+.kpi-label { font-size: 10.5px; color: var(--gray-400); margin-bottom: 3px; font-weight: 500; }
+.kpi-value { font-size: 1.2rem; font-weight: 600; color: var(--text); }
+.kpi-value.good { color: var(--teal); }
+.kpi-value.warn { color: var(--amber); }
+.kpi-value.bad { color: var(--red); }
+
+/* ─── Fact rows ─── */
+.facts { border-top: 1px solid var(--gray-100); padding-top: 0.875rem; display: flex; flex-direction: column; gap: 0; }
+.fact-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12.5px; border-bottom: 0.5px solid var(--gray-100); gap: 0.5rem; }
+.fact-row:last-child { border-bottom: none; }
+.fact-key { color: var(--gray-600); }
+.fact-val { font-weight: 500; text-align: right; }
+.fact-val.good { color: var(--teal); }
+.fact-val.warn { color: #C47A0A; }
+.fact-val.bad { color: var(--red); }
+
+/* ─── Badges / pills ─── */
+.pill {
+  display: inline-block; font-size: 10.5px; font-weight: 500;
+  padding: 2px 9px; border-radius: 20px;
+}
+.pill-blue { background: #E8F1FB; color: #0C447C; }
+.pill-teal { background: var(--teal-light); color: #0A5C52; }
+.pill-amber { background: var(--amber-light); color: #7A4F0A; }
+.pill-red { background: var(--red-light); color: #7A1F1F; }
+.pill-gray { background: var(--gray-100); color: var(--gray-600); border: 0.5px solid var(--gray-200); }
+
+.tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 0.75rem; }
+.tag { font-size: 10.5px; font-weight: 500; padding: 2px 8px; border-radius: 4px; }
+.tag-green { background: #EAF3DE; color: #27500A; }
+.tag-amber { background: var(--amber-light); color: #7A4F0A; }
+.tag-red { background: var(--red-light); color: #7A1F1F; }
+.tag-blue { background: #E8F1FB; color: #0C447C; }
+.tag-teal { background: var(--teal-light); color: #0A5C52; }
+
+/* ─── Card heading ─── */
+.card-pill { margin-bottom: 0.4rem; }
+.card-title-text { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.card-subtitle { font-size: 12px; color: var(--gray-400); }
+
+/* ─── Simulator controls ─── */
+.sim-card {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius); padding: 1.5rem;
+}
+.sim-title { font-size: 13px; font-weight: 600; color: var(--gray-600); margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.slider-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem 2rem; margin-bottom: 1.5rem; }
+.slider-item {}
+.slider-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.slider-name { font-size: 12.5px; color: var(--gray-600); }
+.slider-current { font-size: 14px; font-weight: 600; color: var(--navy); }
+input[type=range] {
+  width: 100%; height: 4px; border-radius: 2px;
+  accent-color: var(--navy); cursor: pointer; display: block;
+}
+.result-strip {
+  background: var(--navy); border-radius: 8px; padding: 1.25rem 1.5rem;
+  display: grid; gap: 1.5rem;
+}
+.result-item {}
+.result-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 3px; }
+.result-val { font-family: var(--serif); font-size: 1.6rem; font-weight: 700; color: #fff; }
+.result-val.pos { color: #4DD4A8; }
+.result-val.neg { color: #F48484; }
+.result-val.neu { color: #5BA3F5; }
+
+/* ─── Insights ─── */
+.insight {
+  border-left: 3px solid; border-radius: 0 8px 8px 0;
+  padding: 0.875rem 1rem; font-size: 13px; line-height: 1.6; margin-bottom: 8px;
+}
+.insight strong { display: block; margin-bottom: 2px; font-weight: 600; font-size: 13px; }
+.insight-green { border-color: var(--teal); background: var(--teal-light); color: #0A5C52; }
+.insight-blue { border-color: var(--navy-light); background: #E8F1FB; color: #0C447C; }
+.insight-amber { border-color: var(--amber); background: var(--amber-light); color: #7A4F0A; }
+.insight-red { border-color: var(--red); background: var(--red-light); color: #7A1F1F; }
+
+/* ─── Timeline ─── */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before {
+  content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px;
+  width: 2px; background: var(--gray-200);
+}
+.tl-item { position: relative; margin-bottom: 1.5rem; }
+.tl-dot {
+  position: absolute; left: -24px; top: 4px;
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--white);
+}
+.tl-dot.blue { background: var(--navy-light); }
+.tl-dot.teal { background: var(--teal); }
+.tl-dot.amber { background: var(--amber); }
+.tl-dot.gray { background: var(--gray-400); }
+.tl-date { font-size: 10.5px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; }
+.tl-title { font-size: 14px; font-weight: 600; color: var(--navy); margin: 2px 0; }
+.tl-desc { font-size: 12.5px; color: var(--gray-600); line-height: 1.6; }
+
+/* ─── Market table ─── */
+.market-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.market-table th {
+  text-align: left; font-size: 10.5px; font-weight: 600;
+  color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 0 10px 8px; border-bottom: 1px solid var(--gray-200);
+}
+.market-table td { padding: 9px 10px; border-bottom: 0.5px solid var(--gray-100); vertical-align: middle; }
+.market-table tr:last-child td { border-bottom: none; }
+.market-table tr:hover td { background: var(--gray-100); }
+.city-name-cell { font-weight: 500; font-size: 13.5px; }
+.city-sub-cell { font-size: 11px; color: var(--gray-400); }
+.rdt-good { color: var(--teal); font-weight: 600; }
+.rdt-ok { color: #C47A0A; font-weight: 600; }
+.rdt-bad { color: var(--red); font-weight: 600; }
+.score-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  font-size: 11px; font-weight: 700;
+}
+.score-a { background: #EAF3DE; color: #27500A; }
+.score-b { background: #E8F1FB; color: #0C447C; }
+.score-c { background: var(--amber-light); color: #7A4F0A; }
+.score-d { background: var(--red-light); color: #7A1F1F; }
+
+/* ─── Chart ─── */
+.chart-container { position: relative; width: 100%; }
+
+/* ─── Progress strip (hero element) ─── */
+.progress-strip {
+  background: rgba(255,255,255,0.06); border-radius: 8px;
+  padding: 1.25rem 1.5rem; margin-top: 2rem;
+}
+.progress-label { font-size: 11px; color: rgba(255,255,255,0.45); margin-bottom: 0.75rem; }
+.progress-phases { display: flex; gap: 4px; margin-bottom: 6px; }
+.phase {
+  flex: 1; height: 6px; border-radius: 3px;
+  background: rgba(255,255,255,0.15);
+  position: relative; overflow: hidden;
+}
+.phase-fill {
+  height: 100%; border-radius: 3px;
+  animation: fillIn 1s ease forwards;
+  animation-delay: var(--delay, 0s);
+  width: 0;
+}
+@keyframes fillIn { to { width: var(--target-width, 100%); } }
+.phase-labels { display: flex; gap: 4px; }
+.phase-label-item { flex: 1; font-size: 10px; color: rgba(255,255,255,0.35); }
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .section { padding: 2rem 1.25rem; }
+  .hero { padding: 2.5rem 1.25rem 2rem; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .slider-group { grid-template-columns: 1fr; }
+  .result-strip { gap: 1rem; }
+}
+@media (max-width: 600px) {
+  .hero-kpis { gap: 1.5rem; }
+  .result-strip { grid-template-columns: 1fr 1fr; }
+}
+
+/* ─── Divider ─── */
+.divider { height: 1px; background: var(--gray-200); margin: 1.5rem 0; }
+
+/* ─── Section ID anchor ─── */
+section[id] { scroll-margin-top: 0; }
+
+/* ─── Checklist ─── */
+.checklist { display: flex; flex-direction: column; gap: 5px; margin-top: 0.75rem; }
+.check-item { display: flex; gap: 8px; font-size: 12.5px; color: var(--gray-600); align-items: flex-start; }
+.check-item::before { content: '→'; color: var(--gray-400); flex-shrink: 0; margin-top: 1px; }
+
+/* ─── Mobile nav ─── */
+.mobile-nav {
+  display: none; background: var(--navy); padding: 0.75rem 1.25rem;
+  position: sticky; top: 0; z-index: 100;
+  align-items: center; justify-content: space-between;
+}
+.mobile-nav-brand { font-family: var(--serif); font-size: 1rem; font-weight: 700; color: #fff; }
+.mobile-nav-tabs { display: flex; gap: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.mobile-tab {
+  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.6);
+  padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+  background: transparent; border: none; cursor: pointer;
+}
+.mobile-tab.active { background: rgba(255,255,255,0.15); color: #fff; }
+@media (max-width: 900px) { .mobile-nav { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; } }
+
+/* ─── Comparateur villes ─── */
+.filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+.filter-btn {
+  font-size: 11.5px; padding: 4px 12px; border-radius: 20px;
+  border: 1px solid var(--gray-200); background: transparent;
+  color: var(--gray-600); cursor: pointer; transition: all 0.15s;
+}
+.filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ─── Sidebar ─── -->
+<aside class="sidebar">
+  <div class="sidebar-brand">Notre projet<br>immobilier</div>
+  <div class="sidebar-sub">Finistère · Stratégie 2 biens</div>
+
+  <div class="nav-label">Vue d'ensemble</div>
+  <a class="nav-link active" onclick="scrollTo('overview')">
+    <span class="nav-dot dot-gray"></span> Introduction
+  </a>
+  <a class="nav-link" onclick="scrollTo('marche')">
+    <span class="nav-dot dot-gray"></span> Le marché
+  </a>
+
+  <div class="nav-label">Les 2 biens</div>
+  <a class="nav-link" onclick="scrollTo('bien1')">
+    <span class="nav-dot dot-blue"></span> Bien 1 — appart
+  </a>
+  <a class="nav-link" onclick="scrollTo('bien2')">
+    <span class="nav-dot dot-teal"></span> Bien 2 — maison
+  </a>
+
+  <div class="nav-label">Décision</div>
+  <a class="nav-link" onclick="scrollTo('strategie')">
+    <span class="nav-dot dot-amber"></span> Stratégie & timing
+  </a>
+  <a class="nav-link" onclick="scrollTo('vigilance')">
+    <span class="nav-dot dot-gray"></span> Points de vigilance
+  </a>
+
+  <div class="sidebar-footer">
+    Données : DVF DGFiP, DHUP 2025,<br>
+    MeilleursAgents · Juillet 2026<br><br>
+    Usage privé · Non contractuel
+  </div>
+</aside>
+
+<!-- ─── Main ─── -->
+<main class="main">
+
+<!-- Mobile nav -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-brand">Notre projet immo · Finistère</div>
+  <div class="mobile-nav-tabs">
+    <button class="mobile-tab active" onclick="scrollTo('overview')">Intro</button>
+    <button class="mobile-tab" onclick="scrollTo('marche')">Marché</button>
+    <button class="mobile-tab" onclick="scrollTo('bien1')">Bien 1</button>
+    <button class="mobile-tab" onclick="scrollTo('bien2')">Bien 2</button>
+    <button class="mobile-tab" onclick="scrollTo('strategie')">Stratégie</button>
+    <button class="mobile-tab" onclick="scrollTo('vigilance')">Vigilance</button>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="overview">
+<div class="hero">
+  <p class="hero-eyebrow">Analyse personnelle · Finistère 2026</p>
+  <h1 class="hero-title">Notre stratégie<br><em>à deux biens</em></h1>
+  <p class="hero-desc">Un appartement locatif pour démarrer rapidement, une maison à rénover nous-mêmes pour du saisonnier. Ce document présente les données, les simulations et les recommandations pour décider ensemble.</p>
+
+  <div class="hero-kpis">
+    <div>
+      <div class="hero-kpi-val accent">~7,6 %</div>
+      <div class="hero-kpi-label">Rendement brut Bien 1</div>
+    </div>
+    <div>
+      <div class="hero-kpi-val teal">~10 %</div>
+      <div class="hero-kpi-label">Rendement saisonnier Bien 2</div>
+    </div>
+    <div>
+      <div class="hero-kpi-val">350 k€</div>
+      <div class="hero-kpi-label">Enveloppe totale max</div>
+    </div>
+  </div>
+
+  <div class="progress-strip">
+    <div class="progress-label">Séquençage prévu sur 3 ans</div>
+    <div class="progress-phases">
+      <div class="phase"><div class="phase-fill" style="background:#5BA3F5; --target-width:100%; --delay:0.2s"></div></div>
+      <div class="phase"><div class="phase-fill" style="background:#4DD4A8; --target-width:100%; --delay:0.6s"></div></div>
+      <div class="phase"><div class="phase-fill" style="background:#E9A840; --target-width:100%; --delay:1s"></div></div>
+      <div class="phase"><div class="phase-fill" style="background:#9CA3AF; --target-width:40%; --delay:1.4s"></div></div>
+    </div>
+    <div class="phase-labels">
+      <div class="phase-label-item">Phase 1 · Achat Bien 1</div>
+      <div class="phase-label-item">Phase 2 · Achat Bien 2</div>
+      <div class="phase-label-item">Phase 3 · Réno + ouverture</div>
+      <div class="phase-label-item">Horizon · Arbitrage</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ─── MARCHÉ ─── -->
+<section class="section" id="marche">
+  <p class="section-eyebrow">Contexte</p>
+  <h2 class="section-title">Le marché dans le Finistère</h2>
+  <p class="section-desc">Le Finistère offre des rendements locatifs parmi les meilleurs de Bretagne, portés par des prix encore accessibles et une demande soutenue. Morlaix ressort comme l'opportunité la plus intéressante pour un investissement locatif pur.</p>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterTable('all', this)">Toutes les villes</button>
+    <button class="filter-btn" onclick="filterTable('rendement', this)">Rendement &gt; 5,5 %</button>
+    <button class="filter-btn" onclick="filterTable('prix', this)">Prix &lt; 2 000 €/m²</button>
+    <button class="filter-btn" onclick="filterTable('saisonnier', this)">Potentiel saisonnier</button>
+  </div>
+
+  <div class="card" style="overflow-x:auto; margin-bottom:1.5rem">
+    <table class="market-table" id="mainTable">
+      <thead>
+        <tr>
+          <th>Ville</th>
+          <th>Prix m² (appt)</th>
+          <th>Loyer m²/mois</th>
+          <th>Rendement brut</th>
+          <th>Tension</th>
+          <th>Profil</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-rdt="7.6" data-prix="1659" data-sais="false">
+          <td><div class="city-name-cell">Morlaix</div><div class="city-sub-cell">14 900 hab. · Finistère nord</div></td>
+          <td>1 659 €</td><td>10,5 €</td>
+          <td class="rdt-good">7,6 %</td>
+          <td><span class="pill pill-teal">Modérée+</span></td>
+          <td><span class="pill pill-blue">Locatif pur</span></td>
+          <td><span class="score-badge score-a">A</span></td>
+        </tr>
+        <tr data-rdt="6.2" data-prix="2438" data-sais="false">
+          <td><div class="city-name-cell">Brest</div><div class="city-sub-cell">140 000 hab. · Métropole</div></td>
+          <td>2 438 €</td><td>12,6 €</td>
+          <td class="rdt-good">6,2 %</td>
+          <td><span class="pill pill-teal">Forte (3,7×)</span></td>
+          <td><span class="pill pill-blue">Locatif pur</span></td>
+          <td><span class="score-badge score-a">A</span></td>
+        </tr>
+        <tr data-rdt="5.8" data-prix="2145" data-sais="false">
+          <td><div class="city-name-cell">Quimper</div><div class="city-sub-cell">63 000 hab. · Préfecture</div></td>
+          <td>2 145 €</td><td>10,4 €</td>
+          <td class="rdt-good">5,8 %</td>
+          <td><span class="pill pill-teal">Forte</span></td>
+          <td><span class="pill pill-blue">Locatif pur</span></td>
+          <td><span class="score-badge score-b">B</span></td>
+        </tr>
+        <tr data-rdt="5.6" data-prix="2080" data-sais="false">
+          <td><div class="city-name-cell">Quimperlé</div><div class="city-sub-cell">~12 000 hab. · Sud Finistère</div></td>
+          <td>2 080 €</td><td>10,2 €</td>
+          <td class="rdt-good">5,6 %</td>
+          <td><span class="pill pill-blue">Modérée</span></td>
+          <td><span class="pill pill-blue">Locatif</span></td>
+          <td><span class="score-badge score-b">B</span></td>
+        </tr>
+        <tr data-rdt="5.4" data-prix="2270" data-sais="false">
+          <td><div class="city-name-cell">Landerneau</div><div class="city-sub-cell">~16 000 hab. · Périurbain Brest</div></td>
+          <td>2 270 €</td><td>10,2 €</td>
+          <td class="rdt-ok">5,4 %</td>
+          <td><span class="pill pill-blue">Modérée</span></td>
+          <td><span class="pill pill-blue">Locatif</span></td>
+          <td><span class="score-badge score-b">B</span></td>
+        </tr>
+        <tr data-rdt="5.3" data-prix="2370" data-sais="true">
+          <td><div class="city-name-cell">Douarnenez</div><div class="city-sub-cell">~14 000 hab. · Littoral</div></td>
+          <td>2 370 €</td><td>10,4 €</td>
+          <td class="rdt-ok">5,3 %</td>
+          <td><span class="pill pill-amber">Stable</span></td>
+          <td><span class="pill pill-teal">Mix saisonnier</span></td>
+          <td><span class="score-badge score-c">C</span></td>
+        </tr>
+        <tr data-rdt="5.1" data-prix="2619" data-sais="false">
+          <td><div class="city-name-cell">Plabennec</div><div class="city-sub-cell">8 600 hab. · Périurbain Brest</div></td>
+          <td>2 619 €</td><td>11,2 €</td>
+          <td class="rdt-ok">5,1 %</td>
+          <td><span class="pill pill-blue">Modérée</span></td>
+          <td><span class="pill pill-blue">Locatif pur</span></td>
+          <td><span class="score-badge score-c">C</span></td>
+        </tr>
+        <tr data-rdt="3.9" data-prix="3190" data-sais="true">
+          <td><div class="city-name-cell">Concarneau</div><div class="city-sub-cell">~19 000 hab. · Littoral premium</div></td>
+          <td>3 190 €</td><td>10,4 €</td>
+          <td class="rdt-bad">3,9 %</td>
+          <td><span class="pill pill-amber">Saisonnière</span></td>
+          <td><span class="pill pill-teal">Saisonnier seul</span></td>
+          <td><span class="score-badge score-d">D</span></td>
+        </tr>
+        <tr data-rdt="3.5" data-prix="4730" data-sais="true">
+          <td><div class="city-name-cell">Beg-Meil / Fouesnant</div><div class="city-sub-cell">Station balnéaire premium</div></td>
+          <td>4 730 €</td><td>13,8 €</td>
+          <td class="rdt-bad">3,5 %</td>
+          <td><span class="pill pill-amber">Très saisonnière</span></td>
+          <td><span class="pill pill-teal">Résid. secondaire</span></td>
+          <td><span class="score-badge score-d">D</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chart-container" style="height:260px; margin-bottom:1.5rem">
+    <canvas id="marketChart" role="img" aria-label="Rendement brut par ville du Finistère, de Morlaix 7.6% à Beg-Meil 3.5%">Rendements bruts : Morlaix 7.6%, Brest 6.2%, Quimper 5.8%, Quimperlé 5.6%, Landerneau 5.4%, Douarnenez 5.3%, Plabennec 5.1%, Concarneau 3.9%, Beg-Meil 3.5%.</canvas>
+  </div>
+
+  <p style="font-size:11px; color:var(--gray-400)">Sources : DVF DGFiP, DHUP 2025, MeilleursAgents juin 2026, SeLoger, LocService. Rendements bruts estimés avant charges et fiscalité.</p>
+</section>
+
+<!-- ─── BIEN 1 ─── -->
+<section class="section" id="bien1">
+  <p class="section-eyebrow">Bien 1 — appartement locatif</p>
+  <h2 class="section-title">L'appart qui démarre la machine</h2>
+  <p class="section-desc">Objectif : un T2 prêt à louer, sans travaux, qui génère un cashflow positif dès le premier mois. Il sert aussi à construire un historique de revenus locatifs pour faciliter l'obtention du crédit du Bien 2. Budget max : 150 000 €.</p>
+
+  <div class="grid-2" style="margin-bottom:1.5rem">
+
+    <div class="card card-accent-blue">
+      <div class="card-head">
+        <div class="card-pill"><span class="pill pill-blue">Cible prioritaire</span></div>
+        <div class="card-title-text">Morlaix — T2 centre-ville</div>
+        <div class="card-subtitle">~75–95 k€ FAI · 40–55 m²</div>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:8px; margin-bottom:1rem">
+          <div class="kpi-tile"><div class="kpi-label">Prix médian m²</div><div class="kpi-value">1 659 €</div></div>
+          <div class="kpi-tile"><div class="kpi-label">Loyer marché m²</div><div class="kpi-value">10,5 €</div></div>
+          <div class="kpi-tile"><div class="kpi-label">Rendement brut</div><div class="kpi-value good">7,6 %</div></div>
+          <div class="kpi-tile"><div class="kpi-label">Cashflow estimé</div><div class="kpi-value good">+120–200 €/mois</div></div>
+        </div>
+        <div class="facts">
+          <div class="fact-row"><span class="fact-key">Surface typique</span><span class="fact-val">40–55 m²</span></div>
+          <div class="fact-row"><span class="fact-key">Loyer attendu</span><span class="fact-val good">510–580 €/mois</span></div>
+          <div class="fact-row"><span class="fact-key">DPE requis</span><span class="fact-val">C ou D minimum</span></div>
+          <div class="fact-row"><span class="fact-key">Travaux</span><span class="fact-val">Aucun ou cosmétique</span></div>
+          <div class="fact-row"><span class="fact-key">Statut fiscal</span><span class="fact-val">LMNP meublé réel</span></div>
+        </div>
+        <div class="tags">
+          <span class="tag tag-green">Cashflow immédiat</span>
+          <span class="tag tag-green">Prix DVF les plus bas 29</span>
+          <span class="tag tag-blue">Programme ACV</span>
+          <span class="tag tag-amber">Bâti ancien → DPE à vérifier</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-pill"><span class="pill pill-gray">Alternative</span></div>
+        <div class="card-title-text">Brest — quartiers Bellevue / Saint-Marc</div>
+        <div class="card-subtitle">~100–130 k€ FAI · 40–55 m²</div>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:8px; margin-bottom:1rem">
+          <div class="kpi-tile"><div class="kpi-label">Prix médian m²</div><div class="kpi-value">2 438 €</div></div>
+          <div class="kpi-tile"><div class="kpi-label">Loyer marché m²</div><div class="kpi-value">12,6 €</div></div>
+          <div class="kpi-tile"><div class="kpi-label">Rendement brut</div><div class="kpi-value good">6,2 %</div></div>
+          <div class="kpi-tile"><div class="kpi-label">Tension locative</div><div class="kpi-value">3,7× demande</div></div>
+        </div>
+        <div class="facts">
+          <div class="fact-row"><span class="fact-key">Loyer attendu</span><span class="fact-val good">525–630 €/mois</span></div>
+          <div class="fact-row"><span class="fact-key">Locataires</span><span class="fact-val">56 % de la ville</span></div>
+          <div class="fact-row"><span class="fact-key">Bassin emploi</span><span class="fact-val">Défense, CHRU, UBO</span></div>
+          <div class="fact-row"><span class="fact-key">Progression 5 ans</span><span class="fact-val">+19,9 %</span></div>
+        </div>
+        <div class="tags">
+          <span class="tag tag-green">Marché très sécurisé</span>
+          <span class="tag tag-green">Forte demande étudiante</span>
+          <span class="tag tag-amber">Budget plus élevé</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Simulator Bien 1 -->
+  <div class="sim-card">
+    <div class="sim-title">Simulateur — Bien 1 (locatif longue durée)</div>
+    <div class="slider-group">
+      <div class="slider-item">
+        <div class="slider-top"><span class="slider-name">Prix d'achat total (FAI)</span><span class="slider-current" id="b1-prix-lbl">90 000 €</span></div>
+        <input type="range" id="b1-prix" min="60000" max="150000" step="5000" value="90000">
+      </div>
+      <div class="slider-item">
+        <div class="slider-top"><span class="slider-name">Loyer mensuel</span><span class="slider-current" id="b1-loyer-lbl">540 €</span></div>
+        <input type="range" id="b1-loyer" min="400" max="750" step="10" value="540">
+      </div>
+      <div class="slider-item">
+        <div class="slider-top"><span class="slider-name">Taux de crédit</span><span class="slider-current" id="b1-taux-lbl">3,5 %</span></div>
+        <input type="range" id="b1-taux" min="25" max="50" step="1" value="35">
+      </div>
+      <div class="slider-item">
+        <div class="slider-top"><span class="slider-name">Durée du crédit</span><span class="slider-current" id="b1-duree-lbl">20 ans</span></div>
+        <input type="range" id="b1-duree" min="15" max="25" step="1" value="20">
+      </div>
+    </div>
+    <div class="result-strip" style="grid-template-columns: repeat(4, 1fr)">
+      <div class="result-item">
+        <div class="result-label">Rendement brut</div>
+        <div class="result-val neu" id="b1-rdt">7,2 %</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Mensualité crédit</div>
+        <div class="result-val" id="b1-mensualite">522 €</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Cashflow brut / mois</div>
+        <div class="result-val pos" id="b1-cashflow">+18 €</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Revenu annuel brut</div>
+        <div class="result-val" id="b1-annuel">6 480 €</div>
+      </div>
+    </div>
+    <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:0.75rem; padding:0 0.1rem">Cashflow avant charges de copropriété, taxe foncière, assurance PNO et impôts. Inclure ~150–250 €/mois supplémentaires de charges selon le bien.</p>
+  </div>
+</section>
+
+<!-- ─── BIEN 2 ─── -->
+<section class="section" id="bien2">
+  <p class="section-eyebrow">Bien 2 — maison saisonnière</p>
+  <h2 class="section-title">La maison qu'on rénove, qu'on loue, et où on vient</h2>
+  <p class="section-desc">Budget 150–200 k€ pour l'achat, rénovation DIY. Usage mixte : 3 à 5 semaines par an pour nous, le reste en location saisonnière Airbnb/Abritel. Cible : Douarnenez, Crozon ou Quimperlé. Jardin obligatoire.</p>
+
+  <div class="grid-2" style="margin-bottom:1.5rem">
+
+    <div class="card card-accent-teal">
+      <div class="card-head">
+        <div class="card-pill"><span class="pill pill-teal">Zone prioritaire</span></div>
+        <div class="card-title-text">Douarnenez ou Crozon</div>
+        <div class="card-subtitle">150–200 k€ · Maison 60–100 m² + jardin</div>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:8px; margin-bottom:1rem">
+          <div class="kpi-tile"><div class="kpi-label">Prix m² zone</div><div class="kpi-value">2 200–2 500 €</div></div>
+          <div class="kpi-tile"><div class="kpi-label">Nuit haute saison</div><div class="kpi-value">80–120 €</div></div>
+          <div class="kpi-tile"><div class="kpi-label">Rendement sais. potentiel</div><div class="kpi-value good">7–10 %</div></div>
+          <div class="kpi-tile"><div class="kpi-label">Revenu net estim./an</div><div class="kpi-value good">9–16 k€</div></div>
+        </div>
+        <div class="facts">
+          <div class="fact-row"><span class="fact-key">Réno DIY estimée</span><span class="fact-val warn">30–60 k€ matériaux</span></div>
+          <div class="fact-row"><span class="fact-key">DPE à l'achat</span><span class="fact-val warn">E acceptable</span></div>
+          <div class="fact-row"><span class="fact-key">Semaines pour nous</span><span class="fact-val">3 à 5 semaines</span></div>
+          <div class="fact-row"><span class="fact-key">Statut fiscal</span><span class="fact-val">LMNP meublé tourisme</span></div>
+          <div class="fact-row"><span class="fact-key">Jardin</span><span class="fact-val good">Obligatoire (atout Airbnb)</span></div>
+        </div>
+        <div class="tags">
+          <span class="tag tag-green">Littoral authentique</span>
+          <span class="tag tag-green">Usage perso inclus</span>
+          <span class="tag tag-green">Plus-value réno</span>
+          <span class="tag tag-amber">Travaux 1–2 ans</span>
+          <span class="tag tag-red">Vérif. règlement copro/PLU</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px">
+      <div class="insight insight-green">
+        <strong>Pourquoi Douarnenez ?</strong>
+        Littoral authentique, prix encore sous 2 500 €/m², stock de maisons des années 70–80 avec jardin à rénover. Saisonnalité juillet–août très forte. Moins saturé qu'Audierne ou Bénodet, clientèle fidèle.
+      </div>
+      <div class="insight insight-blue">
+        <strong>Pourquoi Crozon ?</strong>
+        Presqu'île classée, marché sous-coté par rapport à son attractivité réelle. Accès GR34, plages sauvages. Maisons avec grand terrain disponibles sous les 180 k€. Fort potentiel locatif été.
+      </div>
+      <div class="insight insight-amber">
+        <strong>Le calcul de la réno DIY</strong>
+        En faisant les travaux vous-mêmes, on divise le coût par 2 à 3 vs entreprise. Une réno complète à 150 k€ artisan revient à 50–60 k€ en matériaux seuls. C'est la vraie valeur ajoutée du projet.
+      </div>
+      <div class="insight insight-red">
+        <strong>Point dur — loi Le Meur (2024)</strong>
+        Depuis nov. 2024, les copropriétés peuvent interdire Airbnb à 2/3 des voix. Vérifier le règlement de copropriété AVANT toute offre. Préférer une maison individuelle pour éviter ce risque.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Simulator Bien 2 -->
+  <div class="sim-card">
+    <div class="sim-title">Simulateur — Bien 2 (saisonnier + usage perso)</div>
+    <div class="slider-group">
+      <div class="slider-item">
+        <div class="slider-top"><span class="slider-name">Prix d'achat total</span><span class="slider-current" id="b2-prix-lbl">175 000 €</span></div>
+        <input type="range" id="b2-prix" min="130000" max="200000" step="5000" value="175000">
+      </div>
+      <div class="slider-item">
+        <div class="slider-top"><span class="slider-name">Prix moyen / nuit</span><span class="slider-current" id="b2-nuit-lbl">85 €</span></div>
+        <input type="range" id="b2-nuit" min="60" max="140" step="5" value="85">
+      </div>
+      <div class="slider-item">
+        <div class="slider-top"><span class="slider-name">Taux d'occupation</span><span class="slider-current" id="b2-taux-lbl">55 %</span></div>
+        <input type="range" id="b2-taux" min="30" max="75" step="5" value="55">
+      </div>
+      <div class="slider-item">
+        <div class="slider-top"><span class="slider-name">Semaines pour nous</span><span class="slider-current" id="b2-sem-lbl">4 semaines</span></div>
+        <input type="range" id="b2-sem" min="0" max="8" step="1" value="4">
+      </div>
+      <div class="slider-item">
+        <div class="slider-top"><span class="slider-name">Frais gestion / ménage</span><span class="slider-current" id="b2-frais-lbl">15 %</span></div>
+        <input type="range" id="b2-frais" min="0" max="30" step="5" value="15">
+      </div>
+      <div class="slider-item">
+        <div class="slider-top"><span class="slider-name">Taux de crédit</span><span class="slider-current" id="b2-credit-lbl">3,5 %</span></div>
+        <input type="range" id="b2-credit" min="25" max="50" step="1" value="35">
+      </div>
+    </div>
+    <div class="result-strip" style="grid-template-columns: repeat(3, 1fr)">
+      <div class="result-item">
+        <div class="result-label">Nuits louées / an</div>
+        <div class="result-val neu" id="b2-nuits">200</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Revenus bruts / an</div>
+        <div class="result-val pos" id="b2-brut">17 000 €</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Revenus nets / an</div>
+        <div class="result-val pos" id="b2-net">12 650 €</div>
+      </div>
+    </div>
+    <div class="result-strip" style="grid-template-columns: repeat(3, 1fr); margin-top:8px">
+      <div class="result-item">
+        <div class="result-label">Rendement brut</div>
+        <div class="result-val neu" id="b2-rdt">9,7 %</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Coût semaines perso</div>
+        <div class="result-val" id="b2-cout-perso" style="color:#E9A840">1 428 €</div>
+      </div>
+      <div class="result-item">
+        <div class="result-label">Cashflow / mois</div>
+        <div class="result-val pos" id="b2-cashflow">+430 €</div>
+      </div>
+    </div>
+    <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:0.75rem; padding:0 0.1rem">Crédit calculé sur 20 ans. Charges fixes estimées à 1 800 €/an (taxe foncière, assurance, entretien). Coût semaines perso = manque à gagner si le bien avait été loué ces semaines-là.</p>
+  </div>
+</section>
+
+<!-- ─── STRATÉGIE ─── -->
+<section class="section" id="strategie">
+  <p class="section-eyebrow">Plan d'action</p>
+  <h2 class="section-title">Séquençage et décisions clés</h2>
+  <p class="section-desc">L'ordre des acquisitions n'est pas anodin. Le Bien 1 est la base : il génère des revenus déclarés qui facilitent l'obtention du crédit du Bien 2, et son cashflow absorbe les coûts de portage pendant les travaux.</p>
+
+  <div class="grid-2" style="margin-bottom:1.5rem">
+    <div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot blue"></div>
+          <div class="tl-date">Phase 1 — Maintenant à 6 mois</div>
+          <div class="tl-title">Acheter le Bien 1</div>
+          <div class="tl-desc">T2 prêt à louer à Morlaix ou Brest. Mettre en location rapide (meublé LMNP). Cashflow positif dès le 1er mois. Construction d'un historique bancaire de revenus locatifs.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot amber"></div>
+          <div class="tl-date">Phase 2 — 6 à 18 mois</div>
+          <div class="tl-title">Trouver et acheter le Bien 2</div>
+          <div class="tl-desc">Recherche active sur Douarnenez, Crozon, Quimperlé. Vérifications préalables obligatoires (PLU, règlement copro, DPE). Compromis + financement avec les revenus B1 dans le dossier.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot teal"></div>
+          <div class="tl-date">Phase 3 — Année 2–3</div>
+          <div class="tl-title">Rénovation + ouverture saisonnière</div>
+          <div class="tl-desc">Travaux DIY sur 12–18 mois. Ouverture Airbnb/Abritel avant l'été. Première saison estivale = validation du modèle. Objectif : autofinancement complet dès la 2e saison.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot gray"></div>
+          <div class="tl-date">Horizon 5–7 ans</div>
+          <div class="tl-title">Arbitrage ou 3e bien</div>
+          <div class="tl-desc">Revente Bien 1 avec plus-value si opportunité, ou conservation pour rente. Bien 2 en plein rendement. Possibilité d'un 3e investissement si la capacité d'endettement le permet.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:1rem; padding:1.25rem">
+        <div style="font-size:13px; font-weight:600; margin-bottom:1rem; color:var(--navy)">Critères de recherche — Bien 1</div>
+        <div class="checklist">
+          <div class="check-item">Localisation : Morlaix centre ou Brest quartiers</div>
+          <div class="check-item">Type : T2, surface 38–55 m²</div>
+          <div class="check-item">Prix max FAI : 150 000 €</div>
+          <div class="check-item">DPE : C ou D minimum (E si réno cosmétique faite)</div>
+          <div class="check-item">Loyer marché : >500 €/mois</div>
+          <div class="check-item">Travaux : aucun ou cosmétique (<5 k€)</div>
+          <div class="check-item">Charges copropriété : <100 €/mois</div>
+          <div class="check-item">Rendement brut minimum : >5,5 %</div>
+        </div>
+      </div>
+      <div class="card" style="padding:1.25rem">
+        <div style="font-size:13px; font-weight:600; margin-bottom:1rem; color:var(--navy)">Critères de recherche — Bien 2</div>
+        <div class="checklist">
+          <div class="check-item">Localisation : Douarnenez, Crozon, Quimperlé</div>
+          <div class="check-item">Type : maison individuelle, 60–100 m²</div>
+          <div class="check-item">Jardin : obligatoire (atout Airbnb majeur)</div>
+          <div class="check-item">Prix max FAI : 200 000 €</div>
+          <div class="check-item">DPE : E acceptable si réno DPE prévue</div>
+          <div class="check-item">Travaux DIY : OK si <60 k€ en matériaux</div>
+          <div class="check-item">Accès plage ou littoral : <15–20 min à pied idéalement</div>
+          <div class="check-item">PLU et copro : vérifier meublés tourisme autorisés</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Combined chart -->
+  <div class="card" style="padding:1.5rem">
+    <div style="font-size:13px; font-weight:600; color:var(--navy); margin-bottom:1.25rem">Projection revenus combinés — Bien 1 + Bien 2 (scénario central)</div>
+    <div class="chart-container" style="height:220px">
+      <canvas id="revenusChart" role="img" aria-label="Projection des revenus annuels combinés des 2 biens sur 5 ans">Revenus projetés : an 1 = 6500€ (B1 seul), an 2 = 7500€ (B1) + début B2, an 3 = 7800€ + 12000€ = 19800€, an 4 = 8200€ + 14000€ = 22200€, an 5 = 8500€ + 15000€ = 23500€.</canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ─── VIGILANCE ─── -->
+<section class="section" id="vigilance">
+  <p class="section-eyebrow">Avant de décider</p>
+  <h2 class="section-title">Points de vigilance critiques</h2>
+  <p class="section-desc">Ces points doivent être vérifiés avant toute offre d'achat, pas après. Un seul de ces éléments non vérifié peut rendre un investissement non rentable ou illégal.</p>
+
+  <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:2rem">
+    <div class="insight insight-red">
+      <strong>Règlement de copropriété — Bien 1 et tout bien en immeuble</strong>
+      Depuis la loi Le Meur (novembre 2024), les copropriétaires peuvent interdire les locations Airbnb à la majorité des 2/3. Exiger le règlement de copropriété AVANT toute offre si un usage saisonnier est envisagé. Sur une copropriété de 3 lots, un seul vote peut suffire.
+    </div>
+    <div class="insight insight-red">
+      <strong>DPE — critique pour toute location en 2025+</strong>
+      Les logements classés G sont interdits à la location depuis janvier 2025. Les F seront interdits en 2028. Pour les meublés de tourisme, un DPE E minimum est exigé dans les nouvelles autorisations de changement d'usage. Exiger le DPE AVANT la visite, surtout pour le bâti ancien de Morlaix.
+    </div>
+    <div class="insight insight-amber">
+      <strong>Fiscalité saisonnière — loi Le Meur 2025</strong>
+      Le micro-BIC non classé passe à 30 % d'abattement (plafond 15 000 €/an). Au-delà, régime réel LMNP obligatoire. L'amortissement compense largement mais nécessite un expert-comptable spécialisé LMNP (~600–1 200 €/an). À budgéter dès le départ.
+    </div>
+    <div class="insight insight-amber">
+      <strong>Loyer du Bien 1 — risque 2029</strong>
+      Si on choisit un bien avec locataire en place payant un loyer supérieur au marché, prévoir la renégociation ou la vacance à la sortie de bail. Sécuriser mentalement avec le loyer de marché, pas le loyer actuel.
+    </div>
+    <div class="insight insight-blue">
+      <strong>Financement Bien 2 — la règle des 70 %</strong>
+      Les banques intègrent 70 % des revenus locatifs futurs dans le calcul de capacité d'emprunt. Sans le Bien 1 qui génère déjà des revenus déclarés (12–18 mois), l'obtention du crédit Bien 2 sera plus difficile. C'est la raison principale du séquençage.
+    </div>
+    <div class="insight insight-blue">
+      <strong>Mairie de Fouesnant / Douarnenez — quotas meublés touristiques</strong>
+      Les communes avec plus de 20 % de résidences secondaires peuvent instaurer des quotas d'autorisations de meublés touristiques et limiter à 90 jours/an la location d'une résidence principale. Appeler la mairie avant l'achat pour vérifier les règles en vigueur.
+    </div>
+  </div>
+
+  <div class="card" style="padding:1.5rem; background:var(--navy); color:#fff; border:none">
+    <div style="font-family:var(--serif); font-size:1.15rem; font-weight:700; margin-bottom:0.75rem; color:#fff">Avant toute offre — checklist des vérifications</div>
+    <div class="grid-2" style="gap:1rem">
+      <div>
+        <div style="font-size:11px; font-weight:600; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:0.5rem">Bien 1 (appart)</div>
+        <div style="font-size:12.5px; color:rgba(255,255,255,0.75); line-height:2">
+          ☐ DPE C ou D confirmé<br>
+          ☐ Règlement copro obtenu et lu<br>
+          ☐ PV d'AG des 3 dernières années<br>
+          ☐ Charges copro réelles (pas estimées)<br>
+          ☐ Loyer marché vérifié sur SeLoger<br>
+          ☐ Taxe foncière demandée au vendeur<br>
+          ☐ Travaux votés ou à venir ?
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px; font-weight:600; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:0.5rem">Bien 2 (maison réno)</div>
+        <div style="font-size:12.5px; color:rgba(255,255,255,0.75); line-height:2">
+          ☐ PLU consulté (zone, règles meublés)<br>
+          ☐ Mairie contactée (quota meublés)<br>
+          ☐ Toiture et charpente inspectées<br>
+          ☐ Réseau électrique et plomberie<br>
+          ☐ Présence d'amiante/plomb (avant 1997)<br>
+          ☐ Assainissement (fosse septique ?)<br>
+          ☐ Jardin : surface, exposition, clôture
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ─── Navigation ─── */
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+/* ─── Table filter ─── */
+function filterTable(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#mainTable tbody tr').forEach(row => {
+    const rdt = parseFloat(row.dataset.rdt);
+    const prix = parseFloat(row.dataset.prix);
+    const sais = row.dataset.sais === 'true';
+    if (type === 'all') row.style.display = '';
+    else if (type === 'rendement') row.style.display = rdt >= 5.5 ? '' : 'none';
+    else if (type === 'prix') row.style.display = prix < 2000 ? '' : 'none';
+    else if (type === 'saisonnier') row.style.display = sais ? '' : 'none';
+  });
+}
+
+/* ─── Simulator Bien 1 ─── */
+function updateB1() {
+  const prix = parseInt(document.getElementById('b1-prix').value);
+  const loyer = parseInt(document.getElementById('b1-loyer').value);
+  const tauxRaw = parseInt(document.getElementById('b1-taux').value);
+  const duree = parseInt(document.getElementById('b1-duree').value);
+  const taux = tauxRaw / 10;
+
+  document.getElementById('b1-prix-lbl').textContent = prix.toLocaleString('fr-FR') + ' €';
+  document.getElementById('b1-loyer-lbl').textContent = loyer + ' €';
+  document.getElementById('b1-taux-lbl').textContent = taux.toFixed(1) + ' %';
+  document.getElementById('b1-duree-lbl').textContent = duree + ' ans';
+
+  const r = (taux / 100) / 12;
+  const n = duree * 12;
+  const mensualite = Math.round(prix * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1));
+  const rdt = ((loyer * 12) / prix * 100);
+  const cashflow = loyer - mensualite;
+
+  document.getElementById('b1-rdt').textContent = rdt.toFixed(1) + ' %';
+  document.getElementById('b1-mensualite').textContent = mensualite.toLocaleString('fr-FR') + ' €';
+  document.getElementById('b1-annuel').textContent = (loyer * 12).toLocaleString('fr-FR') + ' €';
+
+  const cfEl = document.getElementById('b1-cashflow');
+  cfEl.textContent = (cashflow >= 0 ? '+' : '') + cashflow.toLocaleString('fr-FR') + ' €';
+  cfEl.className = 'result-val ' + (cashflow > 50 ? 'pos' : cashflow > -50 ? 'neu' : 'neg');
+  document.getElementById('b1-rdt').className = 'result-val ' + (rdt >= 6 ? 'pos' : rdt >= 4.5 ? 'neu' : 'neg');
+}
+
+['b1-prix','b1-loyer','b1-taux','b1-duree'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateB1);
+});
+updateB1();
+
+/* ─── Simulator Bien 2 ─── */
+function updateB2() {
+  const prix = parseInt(document.getElementById('b2-prix').value);
+  const nuit = parseInt(document.getElementById('b2-nuit').value);
+  const taux = parseInt(document.getElementById('b2-taux').value);
+  const sem = parseInt(document.getElementById('b2-sem').value);
+  const frais = parseInt(document.getElementById('b2-frais').value);
+  const creditRaw = parseInt(document.getElementById('b2-credit').value);
+  const creditTaux = creditRaw / 10;
+
+  document.getElementById('b2-prix-lbl').textContent = prix.toLocaleString('fr-FR') + ' €';
+  document.getElementById('b2-nuit-lbl').textContent = nuit + ' €';
+  document.getElementById('b2-taux-lbl').textContent = taux + ' %';
+  document.getElementById('b2-sem-lbl').textContent = sem + ' semaine' + (sem > 1 ? 's' : '');
+  document.getElementById('b2-frais-lbl').textContent = frais + ' %';
+  document.getElementById('b2-credit-lbl').textContent = creditTaux.toFixed(1) + ' %';
+
+  const joursDispos = 365 - sem * 7;
+  const nuits = Math.round(joursDispos * taux / 100);
+  const brut = nuits * nuit;
+  const fraisMontant = Math.round(brut * frais / 100);
+  const charges = 1800;
+  const net = brut - fraisMontant - charges;
+  const rdtBrut = (brut / prix * 100);
+  const coutPerso = Math.round(sem * 7 * nuit * 0.65);
+
+  const r = (creditTaux / 100) / 12;
+  const n = 20 * 12;
+  const mensualite = Math.round(prix * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1));
+  const cashflowMensuel = Math.round((net - mensualite * 12) / 12);
+
+  document.getElementById('b2-nuits').textContent = nuits;
+  document.getElementById('b2-brut').textContent = brut.toLocaleString('fr-FR') + ' €';
+  document.getElementById('b2-net').textContent = Math.max(0, net).toLocaleString('fr-FR') + ' €';
+  document.getElementById('b2-rdt').textContent = rdtBrut.toFixed(1) + ' %';
+  document.getElementById('b2-cout-perso').textContent = coutPerso.toLocaleString('fr-FR') + ' €';
+
+  const cfEl = document.getElementById('b2-cashflow');
+  cfEl.textContent = (cashflowMensuel >= 0 ? '+' : '') + cashflowMensuel.toLocaleString('fr-FR') + ' €';
+  cfEl.className = 'result-val ' + (cashflowMensuel > 0 ? 'pos' : cashflowMensuel > -200 ? 'neu' : 'neg');
+  document.getElementById('b2-rdt').className = 'result-val ' + (rdtBrut >= 7 ? 'pos' : rdtBrut >= 5 ? 'neu' : 'neg');
+}
+
+['b2-prix','b2-nuit','b2-taux','b2-sem','b2-frais','b2-credit'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateB2);
+});
+updateB2();
+
+/* ─── Charts ─── */
+window.addEventListener('load', function() {
+
+  /* Market bar chart */
+  new Chart(document.getElementById('marketChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Morlaix','Brest','Quimper','Quimperlé','Landerneau','Douarnenez','Plabennec','Concarneau','Beg-Meil'],
+      datasets: [{
+        label: 'Rendement brut (%)',
+        data: [7.6, 6.2, 5.8, 5.6, 5.4, 5.3, 5.1, 3.9, 3.5],
+        backgroundColor: ['#1baf7a','#2a78d6','#2a78d6','#eda100','#eda100','#eda100','#eda100','#e34948','#e34948'],
+        borderRadius: 4,
+        borderSkipped: 'bottom',
+        barPercentage: 0.65
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toFixed(1) + ' %' } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Inter' }, color: '#9B9790' } },
+        y: {
+          min: 0, max: 9,
+          grid: { color: '#E2E0D8' },
+          ticks: { callback: v => v + ' %', font: { size: 11, family: 'Inter' }, color: '#9B9790' }
+        }
+      }
+    }
+  });
+
+  /* Revenue projection chart */
+  const labels = ['An 1','An 2','An 3','An 4','An 5'];
+  const b1Data = [6480, 6700, 7000, 7200, 7500];
+  const b2Data = [0, 4000, 12000, 14500, 16000];
+  new Chart(document.getElementById('revenusChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Bien 1 — locatif',
+          data: b1Data,
+          backgroundColor: '#2a78d6',
+          borderRadius: 4, borderSkipped: 'bottom', barPercentage: 0.65
+        },
+        {
+          label: 'Bien 2 — saisonnier',
+          data: b2Data,
+          backgroundColor: '#2A9D8F',
+          borderRadius: 4, borderSkipped: 'bottom', barPercentage: 0.65
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ' : ' + ctx.parsed.y.toLocaleString('fr-FR') + ' €' } }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: { size: 11 }, color: '#9B9790' } },
+        y: { stacked: true, grid: { color: '#E2E0D8' }, ticks: { callback: v => (v/1000).toFixed(0) + 'k €', font: { size: 11 }, color: '#9B9790' } }
+      }
+    }
+  });
+
+  /* Custom legend for revenue chart */
+  const legendEl = document.createElement('div');
+  legendEl.style.cssText = 'display:flex;gap:16px;font-size:12px;color:#6B7280;margin-bottom:8px';
+  legendEl.innerHTML = '<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#2a78d6;display:inline-block"></span>Bien 1 — locatif longue durée</span><span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#2A9D8F;display:inline-block"></span>Bien 2 — saisonnier (après réno)</span>';
+  document.getElementById('revenusChart').parentElement.parentElement.insertBefore(legendEl, document.getElementById('revenusChart').parentElement);
+});
+</script>
+
+</body>
+</html>
